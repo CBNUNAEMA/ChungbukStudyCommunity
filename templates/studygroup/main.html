@@ -1,0 +1,89 @@
+{% extends 'Base.html' %} {% block content %} {% load static %}
+<style>
+  .link_style {
+    text-decoration: none;
+    color: inherit;
+  }
+  .link_style:hover {
+    color: inherit;
+  }
+  .std_btn {
+    height: 50px;
+    color: gray;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+
+<body>
+  <!-- 상단 회색 바 -->
+  <div class="container-fluid" style="background-color: rgb(192, 192, 192)">
+    <div class="container">
+      <div class="form-row" style="height: 50px">
+        <table>
+          <tr>
+            <td
+              class="std_btn"
+              onClick="location.href='{% url 'studyGroup:NewStudy' %}'"
+              style="cursor: pointer"
+            >
+              + 스터디 만들기
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-2">
+    <div class="row">
+      <!-- 스터디 모집 글 템플릿 -->
+      {% for stu in studyList %}
+      <a href="{% url 'studyGroup:Posting' stu.title %}" class="link_style">
+        <table class="table justify-content-center">
+          <tr>
+            <td>
+              <!-- 모집중 태그와 스터디 이름 -->
+              <div class="form-row">
+                <button class="btn btn-primary" disabled>{{stu.tag}}</button> {{stu.purpose}}
+              </div>
+              <!-- 스터디 모집 글 제목 -->
+              <div class="form-row mt-2">
+                <h5>{{stu.title}}</h5>
+              </div>
+              <!-- 스터디 내용 3줄 요약 -->
+              <div class="form-row">{{stu.summary}}</div>
+              <!-- 인원수와 작성날짜 작성자명 -->
+              <div class="form-row mt-3">
+                <div class="col">
+                  <div class="row">
+                    <div class="col" style="display: flex; align-items: center">
+                      <img
+                        style="height: 20px; display: inline-block"
+                        src="{% static 'image/person_icon.png' %}"
+                        alt="Profile"
+                      />&nbsp;모집인원 {{stu.groupNum}}명
+                    </div>
+                    <div class="col-auto"></div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </a>
+      {% endfor %}
+    <!-- 페이징(미구현) -->
+    <nav aria-label="Page naviagation example" id="page">
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</body>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'Base.html' %}
+{% block content %}
+<style>
+    #select_subject {
+        overflow: auto;
+        height: 300px;
+    }
+
+    .btn1 {
+        border: none;
+        outline: none;
+        height: 50px;
+        width: 100%;
+        background-color: #7489F0;
+        color: black;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .list-group .list-group-item {
+        margin: 10px;
+        border: none;
+        border-bottom: 1px solid gray;
+    }
+
+    .list-group .list-group-item1 {
+        background-color: white;
+    }
+
+    .list-group-item:hover {
+        background-color: lightgray;
+        cursor: pointer;
+    }
+
+    .rating span {
+        font-size: 30px;
+        cursor: pointer;
+        color: yellow;
+        text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        font-weight: 100;
+    }
+
+    .rating span:hover,
+    .rating span:hover {
+        color: orange;
+    }
+
+    a:link {
+        color: black;
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: black;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: gray;
+        text-decoration: none;
+    }
+</style>
+<!-- 마이페이지 본문 부분 -->
+<div class=container>
+    <div class="row">
+        <!-- 좌측 사이드 탭 시작 -->
+        <div class="col-lg-3 pt-5" style="border-right: 1px solid none; margin-right : 40px">
+            <ol class="list-group">
+                {% if lectCount %}
+                <li class="list-group-item1 d-flex justify-content-between align-items-start"
+                    style="border : 1px solid rgb(158, 155, 155); padding: 15px; border-radius : 15px">
+                    <div class="ms-2 me-auto">
+                        <a href="{% url 'board:myEval' %}">내가 쓴 강의 모아보기</a>
+                    </div>
+                </li>
+                {% for lect in myLects %}
+                <li class="list-group-item1 d-flex justify-content-between align-items-start"
+                    style="border : 1px solid rgb(158, 155, 155); padding: 15px; border-radius : 15px">
+                    <div class="ms-2 me-auto">
+                        <a href="{% url 'board:eBoard' lect.lectName lect.professor %}">{{lect.lectName}} | {{lect.professor}}</a>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">평가 수 :</span>
+                </li>
+                {% endfor %}
+                {% else %}
+                <div class="ms-2 me-auto">
+                    <a href="{% url 'accounts:ManageSub' %}">아직 수강중인 강의가 없네요.</a>
+                </div>
+                {% endif %}
+            </ol>
+        </div>
+        <!-- 좌측 사이드 탭 끝 -->
+        <div class="col-lg-8 pt-5">
+            <h3 style="text-align: center; padding: 5px;">내가 쓴 강의 평가</h3>
+            <p style="text-align: center">비방이나, 욕설 자제부탁 드립니다.</p>
+            <!-- 강의 추가하는 부분 시작 -->
+            <form action = "{% url 'board:myEval' %}", method="POST">
+                {% csrf_token %}
+                <div class="form-floating form-control">
+                    <!-- 추가할 강의 목록 -->
+                    <ol class="list-group list-group-numbered">
+                        {% for eval in evalList %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{eval.lectName}} | {{eval.rating}}.0/5.0</div>
+                                {{eval.content}}
+                            </div>
+                            <span class="badge bg-info rounded-pill">{{eval.professor}}</span>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </form>
+            <!-- 강의 추가하는 부분 끝 -->
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'Base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+       <!-- 좌측 사이드 카테고리 시작 부분 -->
+       <div class="col-lg-2">
+        <br><h4 style="color: white;">어캐찾앗누?</h4><br>
+        <table class="table" style="table-layout:fixed">
+            <thead>
+                <tr class="text-center table-dark">
+                    <th>                            
+                        게시판
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="text-center"> 
+            {% for LN in lectList %}
+                <tr>
+                    <td>
+                        <a href="/board/post/{{LN.lectName}}" style="text-decoration: none; color: black;">{{LN.lectName}}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- 좌측 사이드 카테고리 끝 부분 -->
+
+        <!-- 여백 부분 -->
+        <div class="col-auto"></div>
+
+        <!-- 작성된 게시글 본문 시작 -->
+        <div class="col-lg-9" style="height:1000px; word-break: break-all;">
+
+                    <br><h4>{{lectName}}</h4>
+                    <!-- 글 제목 -->
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            &nbsp;{{post.title}}
+                        </div>
+                        <div class="col-2" style="text-align: center;">
+                            {{post.pubDate}}
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- 작성자 이름 -->
+                    <div class="col">
+                        &nbsp;{{post.author}}
+                    </div>
+                    <hr>
+                    <!-- 글 내용 -->
+                    <div id="contents" style="min-height:400px"><p>{{post.content}}</p></div>
+
+                    <!-- 이미지 보여주기 -->
+                    {% if post.mainphoto %}
+                    <img src = "{{ post.mainphoto.url }}" alt="" height="600">
+                    <br>
+                    {% endif %}
+                    <hr>
+            <!-- 본문 아래 버튼 부분 -->
+        <form action = "{% url 'board:Posting' lectName pk  %}" method = "POST">
+            {% csrf_token %}
+            <div style="justify-content: center;">
+                {% if not likeit %}
+                <button id="btn" class="btn btn-outline-secondary" type="submit" name = "likeBtn">좋아요</button>
+                {% else %}
+                <button class="btn btn-outline-secondary" type="submit" name = "dislikeBtn">좋아요 취소</button>
+                {% endif %} 
+                <!-- 우측 하단 버튼들 -->
+                <div id="btn_posting" style="float:right;">
+                    <!-- 글 목록으로 돌아가는 버튼 -->
+                    <a href="{% url 'board:board' lectName %}"><button class="btn btn-outline-secondary" type="button">목록</button></a>
+                    
+                    <!-- 글 삭제 버튼 시작 부분 -->
+                    {% if post.author == request.user.username %}
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        삭제
+                    </button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">삭제</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{ Post.postname }} 정말 삭제하시겠습니까?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button type="submit" class="btn btn-secondary" name = "delBtn">삭제하기</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                      {% endif %}
+                      <!-- 글 삭제 버튼 끝 부분 -->
+                </div>
+                <hr>
+            </div>
+            {% for comm in comments %}
+            <div class="row">
+                <div class="col-2">
+                    {{comm.author}}
+                </div>
+                <div class="col">
+                    {{comm.content}}
+                </div>
+                <div class="col-2">
+                    {{comm.pubDate}}
+                </div>
+                <!-- 댓글 삭제 부분 -->
+                {% if comm.author == request.user.username %}
+                    <div class="col-1">
+                        <form action="{% url 'board:Posting' lectName pk %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="commentId" value="{{ comm.id }}">
+                            <button type="submit" class="btn btn-outline-danger" name="deleteCommentBtn">삭제</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+            <hr>
+            {% endfor %}
+                <br>
+                <textarea class="form-control" rows="4" id="contents" name="comments"></textarea><br>
+                <input class="btn btn-outline-dark" type="submit" value="댓글쓰기" name = "commentBtn"></a>
+            
+        </form>
+        <br><br>
+        </div>
+        <!-- 작성된 게시글 본문 끝 부분 -->
+    </div>
+</div>
+
+        
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'Base.html' %} {% block content %}
+<div class="container">
+  <div class="row">
+    <!-- 좌측 사이드 카테고리 시작 부분 -->
+    <div class="col-lg-2">
+      <br>
+      <h4 style="color: white">어캐찾앗누?</h4>
+      <br>
+      <table class="table" style="table-layout: fixed">
+        <thead>
+          <tr class="text-center table-dark">
+            <th>게시판</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          {% for LN in lectList %}
+          <tr>
+            <td>
+              <a href="/board/post/{{LN.lectName}}" style="text-decoration: none; color: black">{{LN.lectName}}</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <!-- 좌측 사이드 카테고리 끝 부분 -->
+
+    <!-- 여백 부분 -->
+    <div class="col-auto"></div>
+
+    <!-- 글쓰기 부분 -->
+    <div class="col-lg-9" style="height: 1000px" ;>
+    <br />
+    <h4>글쓰기 페이지</h4>
+    <form action="{% url 'board:NewPost' lectName %}" method="POST">
+        {% csrf_token %}
+        <select class="form-select" aria-label="Default select example" style="margin-bottom: 5px;" name = "mySelect" id = "mySelect">
+          <option selected>태그 선택</option>
+          <option value="자유 글">자유 글</option>
+          <option value="정보 글">정보 글</option>
+          <option value="질문 글">질문 글</option>
+        </select>
+        <!-- 제목 입력 부분 -->
+        <label for="postname">제목</label><br />
+        <input type="text" class="form-control" id="postname" name="postname" required><br>
+
+        <!-- 내용 입력 부분 -->
+        <label for="contents">내용</label><br><textarea
+        class="form-control"
+        rows="10"
+        id="contents"
+        name="contents"
+        required></textarea><br>
+      
+        <!-- 작성 일자 -->
+        <label for="postdate">작성 일자</label><br>
+        <input type="text" class="form-control" id="postdate" name="postdate" value="{{ date.today }}" disabled><br>
+
+        <!-- 폰트 선택 부분 -->
+        <label for="font">글꼴</label><br>
+        <select class="form-control" id="font" name="font">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Helvetica">Helvetica</option>
+          <option value="맑은 고딕">맑은 고딕</option>
+          <option value="궁서">궁서</option>
+          <option value="돋움">돋움</option>
+        </select><br>
+
+        <!-- 글자 크기 선택 부분 -->
+        <label for="fontsize">글자 크기</label><br>
+        <select class="form-control" id="fontsize" name="fontsize">
+          <option value="12px">12px</option>
+          <option value="16px">16px</option>
+          <option value="16px">20px</option>
+          <option value="16px">24px</option>
+          <option value="16px">28px</option>
+          <option value="16px">32px</option>
+          <option value="16px">36px</option>
+          <option value="16px">40px</option>
+        </select><br>
+
+        <!-- 파일 선택 -->
+        <input class="form-control" type="file" name="mainphoto" /><br /><br />
+        <!-- 글쓰기 버튼 -->
+        <div style="float: right">
+          <a href="{% url 'board:board' lectName %}"><input class="btn btn-outline-dark" type="button" value="취소"></a>
+          <input class="btn btn-primary" type="submit" value="글쓰기" />
+        </div>
+      </form>
+    </div>
+    <!-- 글쓰기 끝 부분 -->
+  </div>
+</div>
+
+{% endblock %}

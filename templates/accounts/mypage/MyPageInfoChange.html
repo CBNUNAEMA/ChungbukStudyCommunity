@@ -1,0 +1,66 @@
+{% extends 'Base.html' %}
+{% block content %}
+
+<style>
+.btn1{
+    border : none;
+    outline: none;
+    height: 50px;
+    width : 100%;
+    background-color: #7489F0;
+    color: black;
+    border-radius: 4px;
+    font-weight: bold;
+}
+</style>
+<!-- 마이페이지 본문 -->
+<div class="container">
+    <div class="row">
+        <!-- 좌측 사이드 페이지 탭 시작 부분 -->
+        <div class="col-lg-4 pt-5">                    
+            <div class="list-group">
+                <a href="{% url 'accounts:MyPage' %}" class="list-group-item list-group-item-action">내 정보</a>
+                <a href="{% url 'accounts:MyPageInfoChange' %}" id="current" class="list-group-item list-group-item-action active" aria-current="true">정보 변경</a>
+                <a href="{% url 'accounts:ManageSub' %}" class="list-group-item list-group-item-action">강의 관리</a>
+                </div>
+        </div>
+        <!-- 좌측 사이드 페이지 탭 끝 부분 -->
+
+        <!-- 정보 변경 시작 부분 -->
+        <div class="col-lg-7 pt-5">
+            <form action="{% url 'accounts:MyPageInfoChange' %}", method="POST">
+                {% csrf_token %}
+                <h5>정보 변경</h5><hr>
+                <!-- 현재 비밀번호 입력 부분 -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="user_pw" name="user_pw" class="form-control"  placeholder="Password" onfocus="placeholder=''" onblur="placeholder='Password'" required>
+                    <label for="user_pw" class="form-label">현재 비밀번호</label> 
+                </div>
+
+                <!-- 변경할 새로운 비밀번호 입력부분 -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="new_user_pw" name="new_user_pw" class="form-control"  placeholder="Password" onfocus="placeholder=''" onblur="placeholder='Password'" required>
+                    <label for="new_user_pw" class="form-label">변경할 비밀번호</label> 
+                </div>
+
+                <!-- 새로운 비밀번호와 일치하는 비밀번호 입력하는 부분 -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="new_user_pw_check" name="new_user_pw_check" class="form-control" placeholder="Password" onfocus="placeholder=''" onblur="placeholder='Password'" required>
+                    <label for="new_user_pw_check" class="form-label">변경할 비밀번호(확인)</label> 
+                </div>
+                <!-- 변경 버튼 -->
+                <input type="submit" class="btn1" value="변경">
+                <br>
+                {% if error %}
+                <div class="alert alert-danger">
+                    <div>
+                        {{warn}}
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+        <!-- 정보 변경 끝 부분 -->
+    </div>
+</div>
+{% endblock %}
